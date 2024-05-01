@@ -22,7 +22,10 @@ class _SignInState extends State<SignIn> {
   TextEditingController passWord = TextEditingController();
 
   Future<void> loginUser() async {
-    final String apiUrl = 'http://10.0.2.2:3002/api/user/login';
+
+
+
+    final String apiUrl = 'http://localhost:3002/api/user/login';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -88,11 +91,11 @@ class _SignInState extends State<SignIn> {
               children: <Widget>[
                 SizedBox(height: screenHeight * 0.05),
                 Container(
-                  height: screenHeight * 0.053,
+                  height: screenHeight * 0.15,
                   width: screenWidth * 0.37,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('asset/icon/travelup.png'),
+                        image: AssetImage('asset/icon/IslandHomesLogo.png'),
                         fit: BoxFit.fill),
                   ),
                 ),

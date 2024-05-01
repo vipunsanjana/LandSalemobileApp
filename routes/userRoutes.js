@@ -11,7 +11,7 @@ const addsCollection = firestore.collection('adds');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
+const authMiddleware = require("../middleware/middleware");
 
 
 
@@ -49,7 +49,6 @@ router.post("/register", async (req, res) => {
 
 
 
-const authMiddleware = require("../middleware/middleware");
 // Define the logout route
 router.post("/logout",authMiddleware, async (req, res) => {
   try {
@@ -154,51 +153,51 @@ router.get("/get-approved-adds", async (req, res) => {
 
 
 
-router.post("/create-add/:userId",upload.single('image'), async (req, res) => {
+router.post("/create-add/:userId", upload.single('image'), async (req, res) => {
   try {
-      const { name, description, price, from } = req.body;
-      const userId = req.params.userId; // Extract user ID from the route parameter
-      const imageData = req.file.buffer;
-      // Check if required fields are provided
-      switch (true) {
-          case !name:
-              return res.status(500).send({ error: "Name is Required" });
-          case !description:
-              return res.status(500).send({ error: "Description is Required" });
-          case !price:
-              return res.status(500).send({ error: "Price is Required" });
-          case !from:
-              return res.status(500).send({ error: "From is Required" });
-      }
+    const { name, description, price, from } = req.body;
+    const userId = req.params.userId; // Extract user ID from the route parameter
+    //console.log("first");
+    //const imageData = req.file.buffer;
+    // Convert image data to base64
+    //const base64Image = imageData.toString('base64');
+    //console.log(imageData);
 
-      const base64Image = imageData.toString('base64');
+    // console.log(base64Image)
+    // console.log(req.file.mimetype)
 
-      // Create the ad
-      const addRef = await addsCollection.add({
-          name,
-          description,
-          price,
-          from,
-          userId, // Associate the ad with the user who created it
-          image: {
-                    data: base64Image,
-                    contentType: req.file.mimetype,
-                  },
-          isApproved: false,
-      });
+    // Check if required fields are provided
+    if (!name || !description || !price || !from) {
+      return res.status(500).send({ error: "All fields are required" });
+    }
 
-      res.status(200).send({ message: "Ad Created Successfully.", success: true, id: addRef.id });
+
+
+    // Create the ad
+    const addRef = await addsCollection.add({
+      name,
+      description,
+      price,
+      from,
+      userId, // Associate the ad with the user who created it
+      // image: {
+      //   data: base64Image,
+      //   contentType: req.file.mimetype,
+      // },
+      isApproved: false,
+    });
+
+    res.status(200).send({ message: "Ad Created Successfully.", success: true, id: addRef.id });
 
   } catch (error) {
-      console.error(error);
-      res.status(500).send({
-          success: false,
-          error,
-          message: "Error in creating ad",
-      });
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      error,
+      message: "Error in creating ad",
+    });
   }
 });
-
 
 
 

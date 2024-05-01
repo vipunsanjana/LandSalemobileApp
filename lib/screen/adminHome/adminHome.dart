@@ -41,7 +41,7 @@ class _AdminHomeState extends State<AdminHome> {
 
   Future<void> fetchApprovedAdds() async {
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:3002/api/admin/get-all-adds'));
+      final response = await http.get(Uri.parse('http://localhost:3002/api/admin/get-all-adds'));
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         setState(() {
@@ -108,66 +108,126 @@ class _AdminHomeState extends State<AdminHome> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Adds'),
+        title: Text('Island Homes'),
 
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : approvedAdds.isEmpty
           ? Center(child: Text('No adds found'))
-          : ListView.builder(
-        itemCount: approvedAdds.length,
-        itemBuilder: (context, index) {
-          final add = approvedAdds[index];
-          return GestureDetector(
-            onTap: () => _navigateToAdDetails(add),
-            child: Card(
-              elevation: 4, // Add elevation for a shadow effect
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), // Add rounded corners
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Add margin
-              child: ListTile(
-                contentPadding: EdgeInsets.all(16), // Add padding for content
-                title: Text(
-                  add['name'] ?? '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+          : SingleChildScrollView(
+        child: ListView.builder(
+          shrinkWrap: true, // Set shrinkWrap to true
+          itemCount: approvedAdds.length,
+          itemBuilder: (context, index) {
+            final add = approvedAdds[index];
+            return GestureDetector(
+              onTap: () => _navigateToAdDetails(add),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Container(
+                  width: double.infinity,
+                  height: 185, // Increased height
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 190,top: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Name: ${add['name'] ?? ''}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Description: ${add['description'] ?? ''}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'From: ${add['from'] ?? ''}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Price: \$${add['price'] ?? ''}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        child: Container(
+                          width: 140,
+                          height: 140,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'asset/icon/home.png', // Adjust this to use the actual image path
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 8), // Add space between title and subtitle
-                    Text(
-                      add['description'] ?? '',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 8), // Add space between description and price
-                    Text(
-                      'Price: \$${add['price'] ?? ''}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                // Add more details to display if needed
               ),
-            ),
-          );
-
-        },
+            );
+          },
+        ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.home),
             label: 'Home',
           ), BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.approval),
             label: 'Approve Add',
           ),
           BottomNavigationBarItem(
@@ -199,20 +259,27 @@ class AdDetailsPage extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: Colors.lightGreenAccent, // Set your desired background color here
-            padding: EdgeInsets.all(100),
+            color: Colors.white24, // Set your desired background color here
+            padding: EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Image.asset(
+                  'asset/icon/home.png', // Replace 'assets/static_image.jpg' with your image asset path
+                  width: 200, // Set the width of the image
+                  height: 200, // Set the height of the image
+                  fit: BoxFit.cover, // Adjust the fit of the image
+                ),
+                SizedBox(height: 16), // Add space between image and text content
                 Text(
                   ad['name'] ?? '',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            textAlign: TextAlign.center,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -232,6 +299,25 @@ class AdDetailsPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                SizedBox(height: 16),
+                Text(
+                  'User Id: \$${ad['userId'] ?? ''}',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  '${ad['isApproved'] == true ? "Approved" : "Not Approved"}',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
                 // Add more details to display if needed
               ],
             ),
@@ -239,5 +325,6 @@ class AdDetailsPage extends StatelessWidget {
         ),
       ),
     );
+
   }
 }

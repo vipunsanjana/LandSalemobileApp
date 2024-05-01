@@ -49,7 +49,7 @@ class _ProfileState extends State<Profile> {
   void AdminDetails() async {
     try {
       final response = await http.get(
-          Uri.parse('http://10.0.2.2:3002/api/admin/profile/$userId'));
+          Uri.parse('http://localhost:3002/api/admin/profile/$userId'));
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
@@ -152,46 +152,36 @@ class _ProfileState extends State<Profile> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage('asset/icon/travelup.png'), // Placeholder image
+                            image: AssetImage('asset/icon/user.png'), // Placeholder image
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                     ),
                     SizedBox(height: 24),
-                    Center(
-                      child: Text(
-                        'Email:',
-                        style: TextStyle(
-                          fontSize:22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        admin['email'],
-                        style: TextStyle(fontSize: 26),
-                      ),
-                    ),
+              Center(
+              child: Text(
+              'Email : ${admin['email']}',
+              style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              ),
+              ),
+              ),
+
                     SizedBox(height: 24),
                     Center(
                       child: Text(
-                        'Role:',
+                        'Role : ${admin['role']}',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+
                     SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        admin['role'],
-                        style: TextStyle(fontSize: 36),
-                      ),
-                    ),
+
                   ],
                 );
               }
@@ -218,7 +208,7 @@ class _ProfileState extends State<Profile> {
 
           },
           style: ElevatedButton.styleFrom(
-            textStyle: TextStyle(fontSize: 18), // Adjust the font size as needed
+            textStyle: TextStyle(fontSize: 28), // Adjust the font size as needed
           ),
           child: Text(
             'Logout',

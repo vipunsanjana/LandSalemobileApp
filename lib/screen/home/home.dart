@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ecomm/predict/predict.dart';
 import 'package:ecomm/screen/createAdd/createAdd.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +41,7 @@ class _HomeState extends State<Home> {
 
   Future<void> fetchApprovedAdds() async {
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:3002/api/user/get-approved-adds'));
+      final response = await http.get(Uri.parse('http://localhost:3002/api/user/get-approved-adds'));
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         setState(() {
@@ -85,6 +86,16 @@ class _HomeState extends State<Home> {
               ),
             );
           break;
+
+          case 3:
+        // Navigate to the Profile screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PredictPage(userId: userId, token: token),
+              ),
+            );
+          break;
       // Add cases for other screens if needed
       }
     });
@@ -103,12 +114,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Approved Ads'),
-
+        title: Text('Island Homes'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -121,63 +129,154 @@ class _HomeState extends State<Home> {
           return GestureDetector(
             onTap: () => _navigateToAdDetails(add),
             child: Card(
-              elevation: 4, // Add elevation for a shadow effect
+              elevation: 4,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), // Add rounded corners
+                borderRadius: BorderRadius.circular(10),
               ),
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Add margin
-              child: ListTile(
-                contentPadding: EdgeInsets.all(16), // Add padding for content
-                title: Text(
-                  add['name'] ?? '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 8), // Add space between title and subtitle
-                    Text(
-                      add['description'] ?? '',
-                      style: TextStyle(fontSize: 16),
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Container(
+                width: double.infinity,
+                height: 185, // Increased height
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // changes position of shadow
                     ),
-                    SizedBox(height: 8), // Add space between description and price
-                    Text(
-                      'Price: \$${add['price'] ?? ''}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 190,top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Name: ${add['name'] ?? ''}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Description: ${add['description'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'From: ${add['from'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Price: \$${add['price'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        width: 140,
+                        height: 140,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            'asset/icon/home.png', // Adjust this to use the actual image path
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                // Add more details to display if needed
               ),
             ),
+
+
+
           );
         },
       ),
+
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Padding(
+              padding: EdgeInsets.all(4.0), // Adjust the padding as needed
+              child: Icon(
+                Icons.home,
+                color: Colors.black, // Set icon color to black
+              ),
+            ),
             label: 'Home',
-          ), BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.all(4.0), // Adjust the padding as needed
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black, // Set icon color to black
+                ),
+            ),
             label: 'Create Add',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Padding(
+              padding: EdgeInsets.all(4.0), // Adjust the padding as needed
+                child: Icon(
+                  Icons.person,
+                  color: Colors.black, // Set icon color to black
+                ),
+            ),
             label: 'Profile',
           ),
-          // Add more BottomNavigationBarItems for other screens if needed
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.all(4.0), // Adjust the padding as needed
+              child: Icon(
+                Icons.batch_prediction,
+                color: Colors.black, // Set icon color to black
+              ),
+            ),
+            label: 'Predict',
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+
     );
+
   }
 }
 
@@ -195,12 +294,19 @@ class AdDetailsPage extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: Colors.lightGreenAccent, // Set your desired background color here
-            padding: EdgeInsets.all(100),
+            color: Colors.white24, // Set your desired background color here
+            padding: EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Image.asset(
+                  'asset/icon/home.png', // Replace 'assets/static_image.jpg' with your image asset path
+                  width: 200, // Set the width of the image
+                  height: 200, // Set the height of the image
+                  fit: BoxFit.cover, // Adjust the fit of the image
+                ),
+                SizedBox(height: 16), // Add space between image and text content
                 Text(
                   ad['name'] ?? '',
                   style: TextStyle(
@@ -235,5 +341,6 @@ class AdDetailsPage extends StatelessWidget {
         ),
       ),
     );
+
   }
 }
