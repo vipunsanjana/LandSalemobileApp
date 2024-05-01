@@ -47,7 +47,7 @@ class _ApproveAddState extends State<ApproveAdd> {
 
   Future<void> fetchApprovedAdds() async {
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:3002/api/admin/get-all-adds'));
+      final response = await http.get(Uri.parse('http://localhost:3002/api/admin/get-all-adds'));
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         setState(() {
@@ -76,7 +76,7 @@ class _ApproveAddState extends State<ApproveAdd> {
     print(addId);
 
     try {
-      final response = await http.put(Uri.parse('http://10.0.2.2:3002/api/admin/approve-add/$addId'),
+      final response = await http.put(Uri.parse('http://localhost:3002/api/admin/approve-add/$addId'),
         headers: {
           'Authorization': 'Bearer $token', // Attach the token to the request
           'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ class _ApproveAddState extends State<ApproveAdd> {
 
   Future<void> deleteAdd(String addId) async {
     try {
-      final response = await http.delete(Uri.parse('http://10.0.2.2:3002/api/admin/delete-add/$addId'),
+      final response = await http.delete(Uri.parse('http://localhost:3002/api/admin/delete-add/$addId'),
         headers: {
           'Authorization': 'Bearer $token', // Attach the token to the request
           'Content-Type': 'application/json',

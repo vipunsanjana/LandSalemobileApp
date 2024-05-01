@@ -84,7 +84,7 @@ class _AdminProfileState extends State<AdminProfile> {
   void AdminDetails() async {
     try {
       final response = await http.get(
-          Uri.parse('http://10.0.2.2:3002/api/admin/profile/$userId'));
+          Uri.parse('http://localhost:3002/api/admin/profile/$userId'));
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
@@ -142,7 +142,7 @@ class _AdminProfileState extends State<AdminProfile> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage('asset/icon/travelup.png'), // Placeholder image
+                            image: AssetImage('asset/icon/user.png'), // Placeholder image
                             fit: BoxFit.cover,
                           ),
                         ),

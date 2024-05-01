@@ -38,6 +38,7 @@ dependencies:
   http: ^1.2.0
   google_fonts:
   image_picker: ^0.8.4+4
+  image_picker_web: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -64,12 +65,16 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - asset/image/hiking.png
+    - asset/image/full.jpg
     - asset/image/travel.png
+    - asset/image/hom.jpeg
+    - asset/icon/home.png
     - asset/image/map.png
     - asset/icon/facebook.png
+    - asset/icon/user.png
+    - asset/icon/IslandHomesLogo.png
     - asset/icon/google.png
-    - asset/icon/travelup.png
+    - asset/icon/ho.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

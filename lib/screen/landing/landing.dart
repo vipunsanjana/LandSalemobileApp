@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
               height: screenHeight*0.52,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('asset/image/travel.png'),
+                      image: AssetImage('asset/image/full.jpg'),
                       fit: BoxFit.fill
                   )
               ),
@@ -45,19 +45,21 @@ class _LoginState extends State<Login> {
                   children: <Widget>[
                     SizedBox(height: screenHeight*0.045,),
                     Container(
-                      height: screenHeight*0.05,
-                      width: screenWidth*0.37,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('asset/icon/travelup.png'),
-                            fit: BoxFit.fill
+                      height: screenHeight * 0.08,
+                      width: screenWidth * 0.37,
+                      child: Center(
+                        child: Image.asset(
+                          'asset/icon/IslandHomesLogo.png', // Replace 'assets/island_homes_image.png' with the path to your image asset
+                          fit: BoxFit.contain, // Adjust the fit as needed
                         ),
                       ),
                     ),
+
+
                     SizedBox(height: screenHeight*0.09,),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                      height: screenHeight*0.11,
+                      height: screenHeight*0.09,
                       width: screenWidth*0.9,
                       child: Center(
                         child: Column(
@@ -65,18 +67,10 @@ class _LoginState extends State<Login> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              'Find anywhere Houses',
+                              'Find Houses',
                               style: TextStyle(
                                 //fontFamily: "Figtree",
-                                fontSize: area*(1.34),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'without hassle',
-                              style: TextStyle(
-                                //fontFamily: "Figtree",
-                                fontSize: area*(1.6),
+                                fontSize: area*(1.24),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

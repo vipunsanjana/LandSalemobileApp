@@ -19,7 +19,24 @@ class _SignUpState extends State<SignUp> {
   TextEditingController passWord1 = TextEditingController();
 
   Future<void> registerUser() async {
-    final String apiUrl = 'http://10.0.2.2:3002/api/user/register';
+    // Email validation
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid email')),
+      );
+      return; // Stop further execution
+    }
+
+    // Password validation
+    if (passWord1.text.length < 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password must be at least 4 characters long')),
+      );
+      return; // Stop further execution
+    }
+
+    // If validations pass, proceed with registration
+    final String apiUrl = 'http://localhost:3002/api/user/register';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -42,8 +59,12 @@ class _SignUpState extends State<SignUp> {
     } else {
       // Error registering user
       print("User Registration Error: ${jsonDecode(response.body)['message']}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User Registration Error: ${jsonDecode(response.body)['message']}')),
+      );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +86,11 @@ class _SignUpState extends State<SignUp> {
               children: <Widget>[
                 SizedBox(height: screenHeight * 0.05),
                 Container(
-                  height: screenHeight * 0.053,
+                  height: screenHeight * 0.15,
                   width: screenWidth * 0.37,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('asset/icon/travelup.png'),
+                      image: AssetImage('asset/icon/IslandHomesLogo.png'),
                       fit: BoxFit.fill,
                     ),
                   ),
