@@ -59,6 +59,7 @@ class _SignInState extends State<SignIn> {
 
       // User logged in successfully
       print("User Logged In Successfully.");
+      SnackBar(content: Text('User Logged In Successfully.'));
       print(jsonDecode(response.body)['user']['role']);
       final String role = jsonDecode(response.body)['user']['role'];
       // Navigate to next screen or perform desired action
@@ -84,6 +85,7 @@ class _SignInState extends State<SignIn> {
 
 
     } else {
+      SnackBar(content: Text('User Logged In Error.'));
       // Error logging in user
       print("Login Error: ${jsonDecode(response.body)['message']}");
     }
