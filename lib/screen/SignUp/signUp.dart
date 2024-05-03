@@ -52,6 +52,8 @@ class _SignUpState extends State<SignUp> {
     if (response.statusCode == 200) {
       // User registered successfully
       print("User Registered Successfully.");
+
+      SnackBar(content: Text('User Looged Successfully'));
       // Navigate to next screen or perform desired action
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => const SignIn(),

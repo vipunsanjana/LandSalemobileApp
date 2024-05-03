@@ -23,9 +23,14 @@ class _HomeState extends State<Home> {
 
   _HomeState({required this.userId, required this.token}); // No need for another constructor
 
+  TextEditingController searchController = TextEditingController();
+
   List<dynamic> approvedAdds = [];
+  List<dynamic> fromAdds = [];
   bool isLoading = true;
   int _selectedIndex = 0;
+
+  bool isSearching = false;
 
 // ... rest of your code
 
@@ -37,6 +42,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     fetchApprovedAdds();
+    fetchFromAdds();
   }
 
   Future<void> fetchApprovedAdds() async {
@@ -48,9 +54,9 @@ class _HomeState extends State<Home> {
           approvedAdds = responseData['data'];
           isLoading = false;
         });
-        print(userId);
-        print(userId);
-        print(userId);
+        print(responseData);
+        print(responseData);
+        print(responseData);
 
       } else {
         print('Failed to load data: ${response.statusCode}');
@@ -59,6 +65,48 @@ class _HomeState extends State<Home> {
     } catch (error) {
       print('Error fetching data: $error');
       // Handle error cases here
+    }
+  }
+
+  Future<void> fetchFromAdds() async {
+    try {
+
+      String from = searchController.text;
+
+      final response = await http.get(Uri.parse('http://localhost:3002/api/user/get-from-adds/$from'));
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        setState(() {
+          fromAdds = responseData['data'];
+          isLoading = false;
+        });
+        print(responseData);
+        print(responseData);
+        print(responseData);
+
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+        // Handle error cases here
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+      // Handle error cases here
+    }
+  }
+
+
+  void _handleSearchButton() {
+    String searchValue = searchController.text;
+    if (searchValue.isNotEmpty) {
+      fetchFromAdds();
+      setState(() {
+        isSearching = true;
+      });
+    } else {
+      fetchApprovedAdds();
+      setState(() {
+        isSearching = false;
+      });
     }
   }
 
@@ -117,15 +165,46 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Island Homes'),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      filled: true,
+                      fillColor: Colors.grey,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: _handleSearchButton, // Call the function to handle search
+                  child: Text('Search'),
+                ),
+              ],
+            ),
+          ),
+        ),
+
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : approvedAdds.isEmpty
-          ? Center(child: Text('No approved ads found'))
+          : isSearching
+          ? fromAdds.isEmpty
+          ? Center(child: Text('No ads found'))
           : ListView.builder(
-        itemCount: approvedAdds.length,
+        itemCount: fromAdds.length,
         itemBuilder: (context, index) {
-          final add = approvedAdds[index];
+          final add = fromAdds[index];
           return GestureDetector(
             onTap: () => _navigateToAdDetails(add),
             child: Card(
@@ -224,6 +303,109 @@ class _HomeState extends State<Home> {
 
 
 
+          );
+        },
+      )           : approvedAdds.isEmpty
+          ? Center(child: Text('No ads found'))
+          : ListView.builder(
+        itemCount: approvedAdds.length,
+        itemBuilder: (context, index) {
+          final add = approvedAdds[index];
+          return GestureDetector(
+            onTap: () => _navigateToAdDetails(add),
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Container(
+                width: double.infinity,
+                height: 185, // Increased height
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 190, top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Name: ${add['name'] ?? ''}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Description: ${add['description'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'From: ${add['from'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Price: \$${add['price'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        width: 140,
+                        height: 140,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            'asset/icon/home.png', // Adjust this to use the actual image path
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -344,3 +526,5 @@ class AdDetailsPage extends StatelessWidget {
 
   }
 }
+
+

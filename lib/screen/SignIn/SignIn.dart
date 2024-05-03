@@ -25,6 +25,23 @@ class _SignInState extends State<SignIn> {
 
 
 
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid email')),
+      );
+      return; // Stop further execution
+    }
+
+
+    if (passWord.text.length < 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password must be at least 4 characters long')),
+      );
+      return; // Stop further execution
+    }
+
+
+
     final String apiUrl = 'http://localhost:3002/api/user/login';
 
     final response = await http.post(
