@@ -25,6 +25,23 @@ class _SignInState extends State<SignIn> {
 
 
 
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid email')),
+      );
+      return; // Stop further execution
+    }
+
+
+    if (passWord.text.length < 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password must be at least 4 characters long')),
+      );
+      return; // Stop further execution
+    }
+
+
+
     final String apiUrl = 'http://localhost:3002/api/user/login';
 
     final response = await http.post(
@@ -42,6 +59,7 @@ class _SignInState extends State<SignIn> {
 
       // User logged in successfully
       print("User Logged In Successfully.");
+      SnackBar(content: Text('User Logged In Successfully.'));
       print(jsonDecode(response.body)['user']['role']);
       final String role = jsonDecode(response.body)['user']['role'];
       // Navigate to next screen or perform desired action
@@ -67,6 +85,7 @@ class _SignInState extends State<SignIn> {
 
 
     } else {
+      SnackBar(content: Text('User Logged In Error.'));
       // Error logging in user
       print("Login Error: ${jsonDecode(response.body)['message']}");
     }

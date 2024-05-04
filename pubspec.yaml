@@ -39,6 +39,7 @@ dependencies:
   google_fonts:
   image_picker: ^0.8.4+4
   image_picker_web: ^3.0.1
+  firebase_storage: ^11.6.9
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +70,11 @@ flutter:
     - asset/image/travel.png
     - asset/image/hom.jpeg
     - asset/icon/home.png
+    - asset/icon/home1.jpg
+    - asset/image/home2.jpeg
+    - asset/image/home3.png
+    - asset/image/home4.png
+    - asset/image/home5.jpg
     - asset/image/map.png
     - asset/icon/facebook.png
     - asset/icon/user.png

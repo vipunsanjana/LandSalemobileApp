@@ -152,8 +152,61 @@ router.get("/get-approved-adds", async (req, res) => {
 
 
 
+router.get("/get-user-adds/:userId", async (req, res) => {
+  try {
 
-router.post("/create-add/:userId", upload.single('image'), async (req, res) => {
+    const { userId } = req.params;
+      const snapshot = await addsCollection.where("userId", "==", userId).get();
+
+      if (snapshot.empty) {
+          res.status(404).send({ message: "No approved adds found.", success: false });
+          return;
+      }
+
+      const approvedAdds = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+      }));
+
+      res.status(200).send({ message: "User adds fetched successfully.", success: true, data: approvedAdds });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Error fetching user adds.", success: false, error: error.message });
+  }
+});
+
+
+
+
+router.get("/get-from-adds/:from", async (req, res) => {
+  try {
+
+    const { from } = req.params;
+      const snapshot = await addsCollection.where("from", "==", from).get();
+
+      if (snapshot.empty) {
+          res.status(404).send({ message: "No approved adds found.", success: false });
+          return;
+      }
+
+      const approvedAdds = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+      }));
+
+      res.status(200).send({ message: "User adds fetched successfully.", success: true, data: approvedAdds });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Error fetching user adds.", success: false, error: error.message });
+  }
+});
+
+
+
+
+
+
+router.post("/create-add/:userId", async (req, res) => {
   try {
     const { name, description, price, from } = req.body;
     const userId = req.params.userId; // Extract user ID from the route parameter
