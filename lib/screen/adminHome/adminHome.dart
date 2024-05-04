@@ -62,6 +62,21 @@ class _AdminHomeState extends State<AdminHome> {
     }
   }
 
+
+
+  List<String> imagePaths = [
+    'asset/image/full.jpg',
+    'asset/image/home2.jpeg',
+    'asset/image/home3.png',
+    'asset/image/home4.png',
+    'asset/image/home5.jpg',
+    // Add more image paths as needed
+  ];
+
+
+
+
+
   // Function to handle bottom navigation bar item tap
   void _onItemTapped(int index) {
     setState(() {
@@ -206,7 +221,7 @@ class _AdminHomeState extends State<AdminHome> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.asset(
-                              'asset/icon/home.png', // Adjust this to use the actual image path
+                              imagePaths[index % imagePaths.length], // Adjust this to use the actual image path
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -244,7 +259,6 @@ class _AdminHomeState extends State<AdminHome> {
 }
 
 
-
 class AdDetailsPage extends StatelessWidget {
   final dynamic ad;
 
@@ -252,26 +266,36 @@ class AdDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> imagePaths = [
+      'asset/image/full.jpg',
+      'asset/image/home2.jpeg',
+      'asset/image/home3.png',
+      'asset/image/home4.png',
+      'asset/image/home5.jpg',
+      // Add more image paths as needed
+    ];
+    imagePaths.shuffle();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Details'),
+        title: Text('Ad Details'),
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: Colors.white24, // Set your desired background color here
+            color: Colors.white24,
             padding: EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'asset/icon/home.png', // Replace 'assets/static_image.jpg' with your image asset path
-                  width: 200, // Set the width of the image
-                  height: 200, // Set the height of the image
-                  fit: BoxFit.cover, // Adjust the fit of the image
+                  imagePaths[0], // Display a randomly picked image
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
                 ),
-                SizedBox(height: 16), // Add space between image and text content
+                SizedBox(height: 16),
                 Text(
                   ad['name'] ?? '',
                   style: TextStyle(
@@ -299,32 +323,11 @@ class AdDetailsPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16),
-                Text(
-                  'User Id: \$${ad['userId'] ?? ''}',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  '${ad['isApproved'] == true ? "Approved" : "Not Approved"}',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                // Add more details to display if needed
               ],
             ),
           ),
         ),
       ),
     );
-
   }
 }

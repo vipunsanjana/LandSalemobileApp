@@ -35,6 +35,16 @@ class _ProfileState extends State<Profile> {
   }
 
 
+  List<String> imagePaths = [
+    'asset/image/full.jpg',
+    'asset/image/home2.jpeg',
+    'asset/image/home3.png',
+    'asset/image/home4.png',
+    'asset/image/home5.jpg',
+    // Add more image paths as needed
+  ];
+
+
   @override
   void initState() {
     super.initState();
@@ -184,6 +194,7 @@ class _ProfileState extends State<Profile> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
+
                             image: AssetImage('asset/icon/user.png'), // Placeholder image
                             fit: BoxFit.cover,
                           ),
@@ -330,7 +341,7 @@ class _ProfileState extends State<Profile> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.asset(
-                                        'asset/icon/home.png',
+                                        imagePaths[index % imagePaths.length],
                                         fit: BoxFit.cover,
                                       ),
                                     ),
