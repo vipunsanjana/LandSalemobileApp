@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'dart:typed_data';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 import 'dart:convert';
 import 'dart:io';
@@ -41,6 +44,36 @@ class _CreateAddPageState extends State<CreateAddPage> {
       ),
     );
   }
+
+
+
+  Future<void> uploadImageToFirebaseStorage() async {
+    try {
+      if (_imageFile == null) return;
+
+      final firebase_storage.Reference storageRef =
+      firebase_storage.FirebaseStorage.instance.ref().child('images');
+
+      final String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      final firebase_storage.UploadTask uploadTask =
+      storageRef.child(imageName).putFile(File(_imageFile!.path));
+
+      final firebase_storage.TaskSnapshot downloadSnapshot =
+      await uploadTask.whenComplete(() => null);
+
+      final String downloadUrl = await downloadSnapshot.ref.getDownloadURL();
+
+      setState(() {
+        _imageUrl = downloadUrl;
+      });
+    } catch (error) {
+      print('Error uploading image to Firebase Storage: $error');
+    }
+  }
+
+
+
+
 
   Future<void> pickImage() async {
     try {
